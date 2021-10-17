@@ -22,6 +22,11 @@ namespace OperationsService.Data.Models
         [Required] 
         public OperationType Type { get; set; }
 
+        public override string ToString()
+        {
+            return $"Operation=[Id=[{Id}], Date=[{Date}], Amount=[{Amount}], Description=[{Description}], Bank=[{Bank}], Type=[{Type}]]";
+        }
+
         public enum BankEnum
         {
             PkoBp
