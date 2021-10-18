@@ -10,7 +10,7 @@ namespace OperationsService.Data
             
         }
 
-        public DbSet<Operation> Operations { get; set; }
+        public virtual DbSet<Operation> Operations { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

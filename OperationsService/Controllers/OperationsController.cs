@@ -65,7 +65,7 @@ namespace OperationsService.Controllers
                 _logger.LogError($"Exception caught. Post of operation {operation} failed. Reason:{e.Message}");
                 return StatusCode(StatusCodes.Status500InternalServerError);
             }
-            return Ok(operation);
+            return CreatedAtAction(nameof(Post), new { id = operation.Id }, operation);
         }
 
         [HttpPut("{id}")]
@@ -98,16 +98,27 @@ namespace OperationsService.Controllers
                 _logger.LogError($"Exception caught. Put of operation with id={id}, oldOperation={operationToUpdate}, newOperation={updatedOperation} failed. Reason: {e.Message}");
                 return StatusCode(StatusCodes.Status500InternalServerError);
             }
-            return Ok();
+            return Ok(updatedOperation);
         }
 
         [HttpDelete("{id}")]
-        public void Delete(int id)
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        public IActionResult Delete(int id)
         {
             Operation customer = new Operation() { Id = id };
             _context.Operations.Attach(customer);
             _context.Operations.Remove(customer);
-            _context.SaveChanges();
+            try
+            {
+                _context.SaveChanges();
+            }
+            catch (Exception e)
+            {
+                _logger.LogError($"Exception caught. Delete of operation with id={id} failed. Reason: {e.Message}");
+                return StatusCode(StatusCodes.Status500InternalServerError);
+            }
+            return Ok();
         }
     }
 }
